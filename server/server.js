@@ -23,5 +23,5 @@ app.use('/api/applications', applicationRoutes);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`ATS server listening on port ${PORT}`);
+  console.log(`TalentOS server listening on port ${PORT}`);
 });

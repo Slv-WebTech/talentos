@@ -15,7 +15,7 @@ Finish verifying Resume Upload + AI Parsing once Cloudinary credentials are avai
 - 2026-08-14: `/docs` baseline, repo scaffold, local Postgres provisioning, Auth, Job Posting. See [[CHANGELOG]].
 - 2026-08-22: Client design system & premium redesign — every page rebuilt on a new CSS Modules component system (tokens, dark-mode support, responsive app shell). See [[PROJECT_STYLE]] and [[CHANGELOG]].
 - 2026-08-22: Resume Upload + AI Parsing — candidates apply to a job with a resume upload; ai-service extracts structured data via spaCy + regex. Code complete, curl battery + ai-service verification passed; real-Cloudinary success path still pending. See [[IMPLEMENTED_FEATURES]], [[DECISIONS]], [[CHANGELOG]].
-- 2026-08-22: Repo pushed to GitHub for the first time (`Slv-WebTech/ats-system`, private) — see the GitHub section below.
+- 2026-08-22: Repo pushed to GitHub for the first time, then renamed to `Slv-WebTech/talentos` once the project got its name — see the GitHub section below.
 
 ## Files Recently Changed
 - `server/db/migrations/003_create_applications.sql`
@@ -72,7 +72,7 @@ Once Cloudinary credentials are added and the remaining verification above passe
 No automated tests exist yet — see [[TESTING]] and [[TECHNICAL_DEBT]].
 
 ## GitHub
-Repo pushed 2026-08-22: `https://github.com/Slv-WebTech/ats-system` (private). This machine has multiple SSH identities configured (`~/.ssh/config`): `github-personal` → `Slv-WebTech` account, `github-work` → a different account, and the **bare `github.com` host defaults to the work key** — always use the explicit `git@github-personal:...` remote URL for this repo, not `git@github.com:...`, or pushes silently authenticate as the wrong account. `gh` CLI is authenticated as both accounts; check `gh auth status`'s "Active account" line before running `gh` commands that create/modify repos.
+Repo pushed 2026-08-22 as `Slv-WebTech/ats-system`, renamed the same day to `https://github.com/Slv-WebTech/talentos` (private) once the project was named — GitHub redirects the old URL automatically, but the local `origin` remote was updated to the new URL rather than relying on that. This machine has multiple SSH identities configured (`~/.ssh/config`): `github-personal` → `Slv-WebTech` account, `github-work` → a different account, and the **bare `github.com` host defaults to the work key** — always use the explicit `git@github-personal:...` remote URL for this repo, not `git@github.com:...`, or pushes silently authenticate as the wrong account. `gh` CLI is authenticated as both accounts; check `gh auth status`'s "Active account" line before running `gh` commands that create/modify repos.
 
 ## Operating notes for this specific dev machine
 Learned the hard way during verification passes — not project bugs, just facts about this environment:

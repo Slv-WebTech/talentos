@@ -55,3 +55,11 @@ Candidates can now apply to a job with a resume upload; the AI service extracts 
 - Verified: 14-case curl battery on `/api/applications` (validation, auth, role, ownership, all list-access branches); `ai-service`'s `/parse-resume` verified standalone against a generated sample resume, catching and fixing a phone-extraction regex bug along the way; `npm run build` clean.
 - Not yet verified: the real Cloudinary success path and the duplicate-application (409) case — this environment has no Cloudinary credentials configured yet; no live browser walkthrough yet. See [[DEV_CONTEXT]] for what's needed to finish verification.
 - Next up: Basic AI ranking — see [[PROJECT_PLAN]].
+
+### 2026-08-22 — Project named "TalentOS"
+The project ran under the generic working name "ats-system" through Auth, Job Posting, the client redesign, and Resume Upload. The client UI already used the brand "TalentOS" throughout (from the redesign — logo, page titles, meta tags, landing copy); this pass made the project's actual name match everywhere else:
+- GitHub repo renamed `Slv-WebTech/ats-system` → `Slv-WebTech/talentos` (GitHub redirects the old URL; `origin` remote updated explicitly regardless — see [[DEV_CONTEXT]]).
+- `README.md` and `docs/PROJECT_CONTEXT.md`'s Project Name field updated.
+- `client/package.json`/`server/package.json` renamed to `talentos-client`/`talentos-server` (lockfiles resynced via `npm install`, dependency versions unchanged).
+- `ai-service/main.py`'s FastAPI title and `server/server.js`'s startup log message updated to match.
+- No functional/API changes — naming and metadata only.

@@ -12,7 +12,7 @@ from skills_extractor import (
     extract_skills,
 )
 
-app = FastAPI(title="ATS AI Service")
+app = FastAPI(title="TalentOS AI Service")
 MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024
 
 

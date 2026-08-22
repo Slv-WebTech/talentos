@@ -69,7 +69,7 @@ Relational structure fits this domain well — applications reference both a job
 ## Folder Structure
 Matches the spec exactly:
 ```
-ats-system/
+talentos/
 ├── client/{components,dashboard,pages,services,App.js,index.js}
 ├── server/{controllers,routes,middleware,models,services,server.js}
 ├── ai-service/{resume_parser.py,ranking_model.py,skills_extractor.py,main.py}

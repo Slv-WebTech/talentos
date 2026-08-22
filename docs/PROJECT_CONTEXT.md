@@ -1,7 +1,7 @@
 # Project Context
 
 ## Project Name
-AI-Powered Resume Screening & Applicant Tracking System (ATS)
+TalentOS — AI-Powered Resume Screening & Applicant Tracking System
 
 ## Project Purpose
 A recruitment platform that lets companies manage job postings, screen resumes, rank candidates, schedule interviews, and hire — with AI handling resume parsing, skill extraction, and candidate ranking against job descriptions.
