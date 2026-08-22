@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getSession } from '../services/authService';
 import { listOpenJobs } from '../services/jobService';
 import Card from '../components/ui/Card';
@@ -63,49 +64,51 @@ export default function CandidateJobs() {
           {jobs.map((job) => {
             const salary = formatSalary(job.salary_min, job.salary_max);
             return (
-              <Card key={job.id} interactive>
-                <div className={styles.cardHead}>
-                  <h3 className={styles.cardTitle}>{job.title}</h3>
-                  <Badge tone="success" dot>
-                    Open
-                  </Badge>
-                </div>
-
-                <div className={styles.metaList}>
-                  {job.department && (
-                    <span className={styles.metaRow}>
-                      <BuildingIcon width={16} height={16} className={styles.metaIcon} />
-                      {job.department}
-                    </span>
-                  )}
-                  {job.location && (
-                    <span className={styles.metaRow}>
-                      <MapPinIcon width={16} height={16} className={styles.metaIcon} />
-                      {job.location}
-                    </span>
-                  )}
-                  {job.min_experience_years != null && (
-                    <span className={styles.metaRow}>
-                      <ClockIcon width={16} height={16} className={styles.metaIcon} />
-                      {job.min_experience_years}+ years experience
-                    </span>
-                  )}
-                  {salary && (
-                    <span className={styles.metaRow}>
-                      <DollarIcon width={16} height={16} className={styles.metaIcon} />
-                      {salary}
-                    </span>
-                  )}
-                </div>
-
-                {job.required_skills?.length > 0 && (
-                  <div className={styles.tagRow}>
-                    {job.required_skills.map((skill) => (
-                      <Tag key={skill}>{skill}</Tag>
-                    ))}
+              <Link key={job.id} to={`/candidate/jobs/${job.id}`} className={styles.cardLink}>
+                <Card interactive>
+                  <div className={styles.cardHead}>
+                    <h3 className={styles.cardTitle}>{job.title}</h3>
+                    <Badge tone="success" dot>
+                      Open
+                    </Badge>
                   </div>
-                )}
-              </Card>
+
+                  <div className={styles.metaList}>
+                    {job.department && (
+                      <span className={styles.metaRow}>
+                        <BuildingIcon width={16} height={16} className={styles.metaIcon} />
+                        {job.department}
+                      </span>
+                    )}
+                    {job.location && (
+                      <span className={styles.metaRow}>
+                        <MapPinIcon width={16} height={16} className={styles.metaIcon} />
+                        {job.location}
+                      </span>
+                    )}
+                    {job.min_experience_years != null && (
+                      <span className={styles.metaRow}>
+                        <ClockIcon width={16} height={16} className={styles.metaIcon} />
+                        {job.min_experience_years}+ years experience
+                      </span>
+                    )}
+                    {salary && (
+                      <span className={styles.metaRow}>
+                        <DollarIcon width={16} height={16} className={styles.metaIcon} />
+                        {salary}
+                      </span>
+                    )}
+                  </div>
+
+                  {job.required_skills?.length > 0 && (
+                    <div className={styles.tagRow}>
+                      {job.required_skills.map((skill) => (
+                        <Tag key={skill}>{skill}</Tag>
+                      ))}
+                    </div>
+                  )}
+                </Card>
+              </Link>
             );
           })}
         </div>

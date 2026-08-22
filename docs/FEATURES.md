@@ -21,13 +21,13 @@ Full feature inventory transcribed from the original project spec. All statuses 
 - **Purpose:** Candidates upload PDF/DOC/DOCX resumes, stored securely in cloud storage.
 - **User value:** Low-friction application process.
 - **Dependencies:** User Authentication, Job Management.
-- **Status:** `PLANNED`
+- **Status:** `IMPLEMENTED` — see [[IMPLEMENTED_FEATURES]]. Success path (real Cloudinary upload) not yet verified in this environment — no credentials configured yet.
 
 ### AI Resume Parsing
 - **Purpose:** Automatically extract name, email, phone, skills, experience, education, certifications, projects from uploaded resumes.
 - **User value:** Recruiters get structured candidate data without manual reading.
 - **Dependencies:** Resume Upload, AI service ([[ARCHITECTURE]]).
-- **Status:** `PLANNED`
+- **Status:** `PARTIALLY_IMPLEMENTED` — name/email/phone/skills/experience-years/education extraction implemented and verified (rule-based: spaCy NER + regex/keyword matching, see [[DECISIONS]]). Certifications and projects extraction not built (narrower scope than this description — see [[PROJECT_PLAN]]).
 
 ### AI Candidate Ranking
 - **Purpose:** Rank candidates by skill match, experience, education, certifications; show a ranking percentage.

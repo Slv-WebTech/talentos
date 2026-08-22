@@ -88,10 +88,52 @@ Architecture Decision Record. Append new entries; never edit history — if a de
 **Decision:** `PUT /api/jobs/:id` accepts a partial update including `status` (`'open' | 'closed'`) — no separate close route.
 **Reason:** Matches the API surface already documented in [[SITE_MAP]] (`PUT /api/jobs/:id` for "edit job"). One endpoint, one ownership check, one validation path, instead of duplicating both across two routes.
 
-### Open decision: File storage provider (Cloudinary vs S3)
-**Date:** 2026-08-14
-**Status:** Not yet decided — deferred until the "Resume upload + AI parsing" step in [[PROJECT_PLAN]], since it doesn't block anything before that.
-
 ### Open decision: Backend hosting (Render vs Railway)
 **Date:** 2026-08-14
 **Status:** Not yet decided — deferred until deployment, see [[DEPLOYMENT]].
+
+---
+
+### Decision: Cloudinary as the file storage provider (resolves the earlier open decision)
+**Date:** 2026-08-22
+**Context:** Resume Upload needed a cloud storage provider for candidate resume files, deferred since 2026-08-14 (see the now-superseded "Open decision" entry this replaces).
+**Options considered:** Cloudinary (simple SDK, API-key auth, generous free tier) vs S3 (more "enterprise standard," needs an AWS account + IAM setup) vs local disk (fastest but doesn't survive a redeploy).
+**Decision:** Cloudinary, chosen by the user. Resumes are uploaded with `resource_type: 'raw'` (not `image`) via `cloudinary.uploader.upload_stream`, stored under a `resumes/` folder with a `candidate-{id}-job-{id}-{timestamp}.{ext}` public ID.
+**Reason:** Simplest correct option for a single-developer, portfolio-scale project — API-key auth only, no IAM/bucket-policy setup before the first upload works.
+**Consequences:** `server/.env` needs `CLOUDINARY_CLOUD_NAME`/`CLOUDINARY_API_KEY`/`CLOUDINARY_API_SECRET` (real account required — not created by this session, added to `server/.env.example` as placeholders). The `cloudinary` npm package is a new server dependency, alongside `multer` for multipart parsing — both justified the same way `pg`/`bcryptjs`/`jsonwebtoken` were: added when a real feature needed them, not speculatively.
+
+### Decision: Node forwards the raw upload buffer to both Cloudinary and the AI service — no second round trip
+**Date:** 2026-08-22
+**Context:** ARCHITECTURE.md's data-flow section describes Express receiving the file, storing it, then calling the AI service. The AI service module `resume_parser.py` was always meant to own PDF/DOC/DOCX text extraction, not the Node server.
+**Decision:** `server/middleware/uploadMiddleware.js` uses `multer` with **memory storage** (not disk), so `req.file.buffer` is available in the controller. `applicationController.js` uploads that same buffer to Cloudinary (`uploadService.js`) and separately forwards it as `multipart/form-data` to the ai-service's `POST /parse-resume` (`aiServiceClient.js`, using Node's native `fetch`/`FormData`/`Blob` — no new npm dependency).
+**Reason:** Avoids downloading the file back from Cloudinary just to hand it to the AI service. Keeps `resume_parser.py` as the sole owner of text-extraction logic, per the existing architecture doc.
+**Consequences:** The full resume file briefly exists in server memory during a request — acceptable at the enforced 5MB cap; would need streaming if that cap were ever raised significantly.
+
+### Decision: A failed AI parse never blocks the application from being created
+**Date:** 2026-08-22
+**Context:** The AI service can legitimately fail to produce structured data — a scanned-image PDF with no extractable text, a corrupted upload, or the ai-service being temporarily down. The naive implementation would `throw` and fail the whole `POST /api/applications` request.
+**Decision:** `aiServiceClient.js`'s `parseResume` never throws. On any non-2xx response or network failure, it resolves to `{ parsedData: { parseError: "<message>" } }`, and the controller always proceeds to insert the application row with that as `parsed_data`.
+**Reason:** A candidate's ability to apply for a job shouldn't depend on a best-effort parsing step succeeding — that would contradict the "low-friction application process" goal in [[FEATURES]] and the "no silent failures" principle in this file's UX Style section (the failure is visible to the recruiter, in `JobApplicants.jsx`, as a warning banner instead of parsed data — not hidden, but also not blocking).
+**Consequences:** Recruiters must manually review any applicant whose card shows a parse-error warning — tracked in [[TECHNICAL_DEBT]].
+
+### Decision: Legacy `.doc` is accepted at upload but never actually parsed
+**Date:** 2026-08-22
+**Context:** Pre-2007 binary Word `.doc` has no good free-library support in Python without external binaries (e.g. `antiword`) that add real deployment complexity for a format that's now rare in practice.
+**Decision:** `.doc` is not blocked client-side or at the Express upload-validation layer (a candidate can still pick one). `ai-service/resume_parser.py`'s `extract_text` immediately raises `ResumeExtractionError` for `.doc` with a clear message — no extraction is actually attempted. The upload still succeeds (per the decision above); the recruiter sees a parse-error warning instead of parsed fields.
+**Reason:** Honest about what "best effort" actually means here rather than pretending partial support exists. PDF and DOCX cover the overwhelming majority of real resumes.
+**Consequences:** Any candidate who uploads a `.doc` resume gets zero structured data — recruiters must open the file manually via the "View resume" link. Tracked in [[TECHNICAL_DEBT]].
+
+### Decision: CSS Modules (not Tailwind/styled-components) for the client design system
+**Date:** 2026-08-22
+**Context:** The client redesign needed a real design system (tokens, reusable components) — [[PROJECT_STYLE]]'s UI Style section had been an explicit placeholder since scaffold.
+**Options considered:** Tailwind CSS (utility-first, widely used, but a new dependency plus a build-config layer); styled-components/Emotion (CSS-in-JS, runtime cost, another dependency); plain CSS Modules (native to Vite, zero new dependency, real per-component style scoping).
+**Decision:** CSS Modules, with a single `client/src/styles/tokens.css` defining design tokens as CSS custom properties that every component's `.module.css` references.
+**Reason:** Vite supports `*.module.css` with zero configuration — no new dependency, matches this project's general "don't introduce unnecessary dependencies" stance the same way `bcryptjs`/raw-SQL-migrations decisions did. Token-driven theming (including free dark-mode support via `prefers-color-scheme`) works the same as it would with any other approach.
+**Consequences:** No utility-class shorthand — every component owns an explicit stylesheet. Acceptable at this project's scale; revisit only if the component count grows large enough that hand-written CSS becomes the bottleneck.
+
+### Decision: New `server/services/` folder for outbound-integration code
+**Date:** 2026-08-22
+**Context:** `uploadService.js` (Cloudinary) and `aiServiceClient.js` (calling the AI service) are neither SQL access (the existing `models/` convention) nor request/response handling (`controllers/`) — [[ARCHITECTURE]]'s folder list didn't have a place for this.
+**Decision:** Added `server/services/` for outbound calls to external systems. `ARCHITECTURE.md`'s folder structure section is updated to include it.
+**Reason:** Precedent already existed for a folder outside the original four (`server/config/db.js`); outbound-integration code deserves the same treatment rather than being crammed into a controller.
+**Consequences:** None — purely additive to the existing structure.

@@ -71,10 +71,12 @@ Matches the spec exactly:
 ```
 ats-system/
 ├── client/{components,dashboard,pages,services,App.js,index.js}
-├── server/{controllers,routes,middleware,models,server.js}
+├── server/{controllers,routes,middleware,models,services,server.js}
 ├── ai-service/{resume_parser.py,ranking_model.py,skills_extractor.py,main.py}
 └── docs/
 ```
+`server/services/` (added 2026-08-22, see [[DECISIONS]]) holds outbound calls to external systems
+(Cloudinary, the AI service) — distinct from `models/` (SQL) and `controllers/` (request handling).
 
 ## Deployment Architecture
 See [[DEPLOYMENT]] for details. Client → Vercel; server + ai-service → Render or Railway; Postgres → managed instance (Render/Railway Postgres or equivalent).

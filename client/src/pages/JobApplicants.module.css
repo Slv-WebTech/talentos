@@ -1,0 +1,126 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font: var(--text-body-sm);
+  color: var(--text-secondary);
+  width: fit-content;
+}
+
+.backLink:hover {
+  color: var(--text-primary);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.title {
+  font: var(--text-h1);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+}
+
+.subtitle {
+  font: var(--text-body-sm);
+  color: var(--text-secondary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-5);
+}
+
+.cardHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-1);
+}
+
+.candidateName {
+  font: var(--text-h4);
+  color: var(--text-primary);
+}
+
+.candidateEmail {
+  font: var(--text-body-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+.detailList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.detailLabel {
+  font: var(--text-caption);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  margin-bottom: var(--space-1);
+  display: block;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font: var(--text-body-sm);
+  color: var(--text-secondary);
+}
+
+.metaIcon {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.educationList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font: var(--text-body-sm);
+  color: var(--text-secondary);
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.resumeLink {
+  font: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--brand-text);
+}
+
+.resumeLink:hover {
+  text-decoration: underline;
+}
+
+.skeletonCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}

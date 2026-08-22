@@ -4,19 +4,19 @@ Planned application routes, derived from [[FEATURES]] and the three user roles i
 
 ```
 Application
-├── / (Landing) — implemented (minimal)
+├── / (Landing) — implemented
 ├── /register — implemented
 ├── /login — implemented
-├── /dashboard — implemented (generic placeholder, pending role-specific dashboards below)
+├── /dashboard — implemented (role-specific quick actions; hiring dashboard below still planned)
 ├── Candidate
 │   ├── /candidate/dashboard        — application status overview
 │   ├── /candidate/jobs             — browse open jobs — implemented
-│   ├── /candidate/jobs/:id         — job detail + apply (resume upload)
-│   └── /candidate/applications     — track own application statuses
+│   ├── /candidate/jobs/:id         — job detail + apply (resume upload) — implemented
+│   └── /candidate/applications     — track own application statuses — implemented
 ├── Recruiter
 │   ├── /recruiter/dashboard        — hiring dashboard (active jobs, pipeline)
 │   ├── /recruiter/jobs             — manage own postings + create form (combined) — implemented
-│   ├── /recruiter/jobs/:id         — edit job / view applicants (ranked)
+│   ├── /recruiter/jobs/:id         — view applicants (unranked — AI ranking not built yet) — implemented
 │   ├── /recruiter/jobs/:id/interviews — schedule/manage interviews for a job
 │   └── /recruiter/analytics        — recruitment reports, export
 └── Admin
@@ -33,11 +33,11 @@ Application
 | `/dashboard` | Generic placeholder post-login screen | Any authenticated role | `GET /api/auth/me` (session read client-side, not actually called yet) | IMPLEMENTED (placeholder — role-specific dashboards below still PLANNED) |
 | `/candidate/dashboard` | Candidate's application overview | Candidate | `GET /api/applications?candidate=me` | PLANNED |
 | `/candidate/jobs` | Browse open jobs | Candidate (any authenticated role, in practice) | `GET /api/jobs` | IMPLEMENTED |
-| `/candidate/jobs/:id` | Job detail + apply | Candidate | `GET /api/jobs/:id`, `POST /api/applications` | PLANNED |
-| `/candidate/applications` | Track own applications | Candidate | `GET /api/applications?candidate=me` | PLANNED |
+| `/candidate/jobs/:id` | Job detail + apply | Candidate | `GET /api/jobs/:id`, `POST /api/applications` | IMPLEMENTED |
+| `/candidate/applications` | Track own applications | Candidate | `GET /api/applications?candidate=me` | IMPLEMENTED |
 | `/recruiter/dashboard` | Hiring dashboard | Recruiter | `GET /api/dashboard/summary` | PLANNED |
 | `/recruiter/jobs` | Manage own postings + create form (no separate `/new` route — combined into one page) | Recruiter | `POST /api/jobs`, `GET /api/jobs?recruiter=me`, `PUT /api/jobs/:id` (status toggle only, in the UI) | IMPLEMENTED |
-| `/recruiter/jobs/:id` | Edit job, view ranked applicants | Recruiter | `PUT /api/jobs/:id`, `GET /api/jobs/:id/applications` | PLANNED |
+| `/recruiter/jobs/:id` | View applicants (unranked — AI ranking not built yet) | Recruiter | `GET /api/applications?job=:id` | IMPLEMENTED |
 | `/recruiter/jobs/:id/interviews` | Schedule/manage interviews | Recruiter | `POST /api/interviews`, `PUT /api/interviews/:id` | PLANNED |
 | `/recruiter/analytics` | Reports, PDF/Excel export | Recruiter | `GET /api/analytics/*` | PLANNED |
 | `/admin/dashboard` | Platform overview | Admin | `GET /api/admin/summary` | PLANNED |

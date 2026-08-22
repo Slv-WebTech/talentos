@@ -172,6 +172,16 @@ export function AlertIcon(props) {
   );
 }
 
+export function UploadIcon(props) {
+  return (
+    <svg {...base(props)}>
+      <path d="M10 13V4" />
+      <path d="M6.25 7.25 10 3.5l3.75 3.75" />
+      <path d="M3.5 13.5v2.25A1.25 1.25 0 0 0 4.75 17h10.5a1.25 1.25 0 0 0 1.25-1.25V13.5" />
+    </svg>
+  );
+}
+
 export function InboxIcon(props) {
   return (
     <svg {...base(props)}>

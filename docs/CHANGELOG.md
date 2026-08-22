@@ -35,3 +35,23 @@ Recruiters create/edit/close job postings; any authenticated user can browse ope
 - Verified with a 17-case curl battery plus a live browser walkthrough (recruiter posts → candidate sees it, closed jobs correctly excluded from the open listing, role- and ownership-based access control all confirmed).
 - This dev machine turned out to have several unrelated services already bound to common ports (5000, 5050, 5173–5175) — verification had to route around them with explicit port overrides; see [[DEV_CONTEXT]] for the resulting operating note.
 - Next up: Resume upload + AI parsing — see [[PROJECT_PLAN]].
+
+### 2026-08-22 — Client design system & premium redesign
+The client had zero CSS through Auth and Job Posting (plain unstyled HTML, inline `fontFamily` only). Built a full design system and applied it to every existing page:
+- Design tokens (`client/src/styles/tokens.css`, dark-mode support via `prefers-color-scheme`), a CSS Modules component library, a hand-written icon set, a responsive authenticated app shell and auth layout — full inventory in [[PROJECT_STYLE]].
+- Every page redesigned: `Home`, `Login`, `Register`, `Dashboard`, `RecruiterJobs`, `CandidateJobs`, plus a new `NotFound` page and catch-all route.
+- Real `<label>` elements on every form field, resolving the placeholder-as-label accessibility gap tracked in [[TECHNICAL_DEBT]] since Auth.
+- Fixed a real bug: job listings previously flashed "no jobs" before their initial fetch resolved (missing loading state) — both `RecruiterJobs.jsx` and `CandidateJobs.jsx` fixed.
+- CSS Modules chosen over Tailwind/CSS-in-JS — see [[DECISIONS]].
+- Verified: `npm run build` clean. No automated visual regression coverage (tracked in [[TECHNICAL_DEBT]]).
+- Next up: Resume upload + AI parsing — see [[PROJECT_PLAN]].
+
+### 2026-08-22 — Resume Upload + AI Parsing
+Candidates can now apply to a job with a resume upload; the AI service extracts structured data:
+- `server/`: `applications` table + migration, `applicationModel.js`/`applicationController.js`/`applicationRoutes.js` (`/api/applications`), Cloudinary integration (`config/cloudinary.js`, new `server/services/` folder), `multer`-based upload middleware (5MB cap, PDF/DOC/DOCX).
+- `ai-service/`: first real dependencies beyond FastAPI — spaCy (`en_core_web_sm`), `pdfplumber`, `python-docx`. `resume_parser.py` (text extraction) + `skills_extractor.py` (name/email/phone/skills/experience/education) + `POST /parse-resume`.
+- `client/`: `JobDetail`, `CandidateApplications`, `JobApplicants` pages; a new `FileUpload` component; `apiClient.js` extended for file uploads.
+- Cloudinary chosen as the file storage provider (resolves the open decision from 2026-08-14); a failed AI parse never blocks an application (surfaced to the recruiter instead); `.doc` files accepted but not parsed by design — full reasoning in [[DECISIONS]].
+- Verified: 14-case curl battery on `/api/applications` (validation, auth, role, ownership, all list-access branches); `ai-service`'s `/parse-resume` verified standalone against a generated sample resume, catching and fixing a phone-extraction regex bug along the way; `npm run build` clean.
+- Not yet verified: the real Cloudinary success path and the duplicate-application (409) case — this environment has no Cloudinary credentials configured yet; no live browser walkthrough yet. See [[DEV_CONTEXT]] for what's needed to finish verification.
+- Next up: Basic AI ranking — see [[PROJECT_PLAN]].

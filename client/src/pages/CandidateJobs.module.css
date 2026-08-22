@@ -10,6 +10,12 @@
   gap: var(--space-1);
 }
 
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
 .title {
   font: var(--text-h1);
   letter-spacing: var(--tracking-tight);

@@ -3,7 +3,16 @@
 Status: **initial defaults**, established before any UI/code exists. Follow these once implementation starts; revise here (don't drift silently) if a convention proves wrong.
 
 ## UI Style
-Not yet established — no components exist. Visual tokens (color system, typography, spacing scale, radii, shadows) should be defined when the first UI work begins (client scaffold + login/register screens), not invented speculatively now. When that happens, this section gets filled in and this note removed.
+Established 2026-08-22 with the full client redesign (Auth, Job Posting, and every page rebuilt on a shared design system — see [[DECISIONS]]).
+
+- **Tokens:** CSS custom properties in `client/src/styles/tokens.css` — indigo brand palette on a cool-slate neutral scale, a 4px spacing scale, a type scale (`--text-display` through `--text-caption`), restrained radii (`--radius-sm` 6px through `--radius-xl` 20px), layered low-opacity shadows, and motion tokens (`--duration-*`, `--ease-out`). Dark mode is a token-only override under `prefers-color-scheme: dark` — components never branch on theme themselves.
+- **Component styling:** CSS Modules (Vite-native, zero new dependency) — one `Component.jsx` + `Component.module.css` pair per component. Pages follow the same pairing (`PageName.jsx` + `PageName.module.css`).
+- **Base styles:** `client/src/styles/base.css` — reset, focus-visible rings, a skip-to-content link, reduced-motion support, `.container`/`.visually-hidden` utilities.
+- **Component library:** `client/src/components/ui/` — `Button`, `Card`, `Badge`/`Tag`, `Alert`, `Skeleton`/`Spinner`, `EmptyState`, `Logo`, `RoleOption`, `FileUpload`, and `Field.jsx` (`Input`/`PasswordInput`/`Select`, all with real `<label>` elements — resolves the placeholder-as-label gap tracked in [[TECHNICAL_DEBT]]).
+- **Icons:** hand-written inline SVGs in `client/src/components/icons/Icons.jsx` (stroke-based, 20×20 viewBox) — no icon package dependency for the ~18 glyphs actually used.
+- **Layout:** `client/src/components/layout/AppShell.jsx` (authenticated header/nav/footer, responsive mobile menu) and `AuthLayout.jsx` (centered branded card for Login/Register).
+- **Typeface:** Inter via Google Fonts `<link>` in `client/index.html`, with a full system-font fallback stack.
+- **Responsive baseline:** every page usable at the 768px breakpoint (per the UX Style mobile requirement below) — verified via `client/src/components/layout/AppShell.module.css`'s mobile nav and each page's own `@media (max-width: 640/768px)` rules.
 
 ## UX Style
 General principles to follow once screens exist:

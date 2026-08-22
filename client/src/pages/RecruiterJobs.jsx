@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getSession } from '../services/authService';
 import { listMyJobs, createJob, updateJob } from '../services/jobService';
 import Card from '../components/ui/Card';
@@ -207,6 +208,9 @@ export default function RecruiterJobs() {
                 )}
 
                 <div className={styles.cardFooter}>
+                  <Button as={Link} to={`/recruiter/jobs/${job.id}`} variant="secondary" size="sm">
+                    View applicants
+                  </Button>
                   <Button
                     variant={job.status === 'open' ? 'secondary' : 'primary'}
                     size="sm"

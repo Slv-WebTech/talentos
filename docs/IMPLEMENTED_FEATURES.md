@@ -41,4 +41,29 @@ Only features that are verifiably working belong here: code exists, it's integra
 - **Known limitations:**
   - No edit-via-UI beyond the open/closed toggle (title/skills/etc. aren't editable from the client yet, though the API supports it).
   - No job search, filtering, or pagination.
-  - No job-detail page yet (deferred to Resume Upload, where "apply" needs a place to happen).
+
+---
+
+### Resume Upload + AI Parsing
+- **Status:** `PARTIALLY_IMPLEMENTED` — full code path built and unit-verified; the real Cloudinary success path isn't yet verified in this environment (no credentials configured). AI ranking is a separate, not-yet-built feature.
+- **Where:**
+  - Schema: `server/db/migrations/003_create_applications.sql` (one application per job/candidate pair — unique constraint)
+  - Model: `server/models/applicationModel.js`
+  - Controller: `server/controllers/applicationController.js`
+  - Routes: `server/routes/applicationRoutes.js` (`POST /api/applications`, `GET /api/applications?candidate=me`, `GET /api/applications?job=:id`) — all behind `verifyToken`; apply additionally behind `requireRole('candidate')`
+  - Services: `server/config/cloudinary.js`, `server/middleware/uploadMiddleware.js` (multer, memory storage, 5MB cap), `server/services/uploadService.js` (Cloudinary raw upload), `server/services/aiServiceClient.js` (calls the AI service, never throws — see [[DECISIONS]])
+  - AI service: `ai-service/resume_parser.py` (text extraction), `ai-service/skills_extractor.py` (name/email/phone/skills/experience/education extraction), `POST /parse-resume` in `ai-service/main.py`
+  - Client: `client/src/pages/{JobDetail,CandidateApplications,JobApplicants}.jsx` at `/candidate/jobs/:id`, `/candidate/applications`, `/recruiter/jobs/:id`; `client/src/components/ui/FileUpload.jsx`; `client/src/services/applicationService.js`; `apiClient.js` extended for `FormData` bodies
+- **Depends on:** Job Posting (done), a Cloudinary account (credentials not yet added to `server/.env` in this environment — see [[DEV_CONTEXT]]).
+- **Testing status:** No automated tests (same gap as Auth/Job Posting, see [[TECHNICAL_DEBT]]). Manually verified:
+  - 14-case curl battery on `/api/applications`: no file/invalid type/missing jobId/nonexistent job/closed job/role-blocked/unauthenticated (all 400/401/403/404 as expected), all four `GET` access-control branches (`?candidate=me` as candidate/recruiter, `?job=:id` as owner/non-owner/candidate, missing query param).
+  - `ai-service`'s `/parse-resume` verified standalone via a real spaCy `en_core_web_sm` install and a generated sample DOCX resume — all six fields (name, email, phone, skills, experienceYears, education) extracted correctly; a phone-extraction regex bug (matched across a paragraph break) was caught and fixed during this verification. Error paths verified: unsupported file type, empty file, `.doc` rejection.
+  - `npm run build` (client) clean.
+  - **Not yet verified:** `POST /api/applications` success path with a real file (needs real Cloudinary credentials), the 409 duplicate-application case, and a live browser walkthrough of the full apply → view-applicants flow.
+- **Known limitations:**
+  - AI ranking not built — `JobApplicants.jsx` lists applicants unranked, newest-first.
+  - Certifications/projects extraction not built (narrower than [[FEATURES]]'s full description).
+  - `.doc` files are accepted but never actually parsed by design — recruiters must review them manually (see [[DECISIONS]]).
+  - A parse failure (any reason) doesn't block the application — it's surfaced to the recruiter as a warning instead of parsed fields, by design (see [[DECISIONS]]).
+  - AI service's `/parse-resume` has no request authentication (network-isolation only, matches the existing `/health` precedent).
+  - Regex-based phone/experience-years/education extraction are heuristics with known edge cases on unusually formatted resumes.

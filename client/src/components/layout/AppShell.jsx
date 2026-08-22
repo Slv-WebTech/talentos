@@ -4,7 +4,7 @@ import styles from './AppShell.module.css';
 import Logo from '../ui/Logo';
 import Button from '../ui/Button';
 import { getSession, logout } from '../../services/authService';
-import { BriefcaseIcon, InboxIcon, LogoutIcon, MenuIcon, XIcon } from '../icons/Icons';
+import { BriefcaseIcon, ClockIcon, InboxIcon, LogoutIcon, MenuIcon, XIcon } from '../icons/Icons';
 
 function navItemsFor(role) {
   const items = [{ to: '/dashboard', label: 'Dashboard', icon: null }];
@@ -13,6 +13,7 @@ function navItemsFor(role) {
   }
   if (role === 'candidate') {
     items.push({ to: '/candidate/jobs', label: 'Browse jobs', icon: InboxIcon });
+    items.push({ to: '/candidate/applications', label: 'My applications', icon: ClockIcon });
   }
   return items;
 }
