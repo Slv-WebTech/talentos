@@ -1,0 +1,125 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  padding-block: var(--space-8) var(--space-14);
+}
+
+/* ---- Greeting ---- */
+.greeting {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.eyebrow {
+  margin: 0;
+  font: var(--text-caption);
+  color: var(--text-tertiary);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.headingRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.title {
+  margin: 0;
+  font: var(--text-h1);
+  color: var(--text-primary);
+}
+
+.roleBadge {
+  text-transform: capitalize;
+}
+
+/* ---- Primary action card ---- */
+.primaryCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  max-width: 620px;
+}
+
+.primaryIconBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  background: var(--brand-subtle);
+  color: var(--brand-text);
+}
+
+.primaryHeading {
+  margin: 0;
+  font: var(--text-h3);
+  color: var(--text-primary);
+}
+
+.primaryBody {
+  margin: 0;
+  font: var(--text-body);
+  color: var(--text-secondary);
+}
+
+/* ---- Roadmap section ---- */
+.roadmapSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.roadmapHeading {
+  margin: 0;
+  font: var(--text-h4);
+  color: var(--text-primary);
+}
+
+.roadmapGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-5);
+}
+
+@media (max-width: 640px) {
+  .roadmapGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.roadmapCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  opacity: 0.72;
+}
+
+.roadmapCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.roadmapIconWrap {
+  display: flex;
+  color: var(--text-tertiary);
+}
+
+.roadmapCardTitle {
+  margin: 0;
+  font: var(--text-h4);
+  color: var(--text-primary);
+}
+
+.roadmapCardBody {
+  margin: 0;
+  font: var(--text-body-sm);
+  color: var(--text-secondary);
+}

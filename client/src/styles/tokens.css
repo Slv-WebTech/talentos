@@ -1,0 +1,214 @@
+/*
+  Design tokens. Component styles should reference the semantic aliases
+  (--bg-*, --text-*, --border-*, --brand-*) rather than raw palette steps,
+  so the dark-mode block below is the only place theme swaps happen.
+*/
+
+:root {
+  /* ---- Raw palette: neutral (cool slate) ---- */
+  --color-neutral-0: #ffffff;
+  --color-neutral-25: #fcfdfe;
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+  --color-neutral-950: #020617;
+
+  /* ---- Raw palette: brand (indigo) ---- */
+  --color-brand-50: #eef0ff;
+  --color-brand-100: #e0e3ff;
+  --color-brand-200: #c6cbfe;
+  --color-brand-300: #a5abfc;
+  --color-brand-400: #8380f8;
+  --color-brand-500: #665eef;
+  --color-brand-600: #5145e0;
+  --color-brand-700: #4235c4;
+  --color-brand-800: #362ca0;
+  --color-brand-900: #2a2678;
+
+  /* ---- Raw palette: semantic accents ---- */
+  --color-success-50: #ecfdf5;
+  --color-success-200: #a7f3d0;
+  --color-success-600: #059669;
+  --color-success-700: #047857;
+
+  --color-warning-50: #fffbeb;
+  --color-warning-200: #fde68a;
+  --color-warning-600: #b45309;
+  --color-warning-700: #92400e;
+
+  --color-danger-50: #fef2f2;
+  --color-danger-200: #fecaca;
+  --color-danger-600: #dc2626;
+  --color-danger-700: #b91c1c;
+
+  --color-info-50: #eff6ff;
+  --color-info-200: #bfdbfe;
+  --color-info-600: #2563eb;
+  --color-info-700: #1d4ed8;
+
+  /* ---- Semantic surface / text / border tokens (light theme, default) ---- */
+  --bg-page: var(--color-neutral-50);
+  --bg-surface: var(--color-neutral-0);
+  --bg-surface-secondary: var(--color-neutral-50);
+  --bg-subtle: var(--color-neutral-100);
+  --bg-overlay: rgba(15, 23, 42, 0.44);
+
+  --border-subtle: var(--color-neutral-100);
+  --border-default: var(--color-neutral-200);
+  --border-strong: var(--color-neutral-300);
+
+  --text-primary: var(--color-neutral-900);
+  --text-secondary: var(--color-neutral-600);
+  --text-tertiary: var(--color-neutral-400);
+  --text-inverse: var(--color-neutral-0);
+  --text-on-brand: #ffffff;
+
+  --brand: var(--color-brand-600);
+  --brand-hover: var(--color-brand-700);
+  --brand-active: var(--color-brand-800);
+  --brand-subtle: var(--color-brand-50);
+  --brand-subtle-border: var(--color-brand-200);
+  --brand-text: var(--color-brand-700);
+
+  --success-bg: var(--color-success-50);
+  --success-border: var(--color-success-200);
+  --success-text: var(--color-success-700);
+  --success-solid: var(--color-success-600);
+
+  --warning-bg: var(--color-warning-50);
+  --warning-border: var(--color-warning-200);
+  --warning-text: var(--color-warning-700);
+  --warning-solid: var(--color-warning-600);
+
+  --danger-bg: var(--color-danger-50);
+  --danger-border: var(--color-danger-200);
+  --danger-text: var(--color-danger-700);
+  --danger-solid: var(--color-danger-600);
+
+  --info-bg: var(--color-info-50);
+  --info-border: var(--color-info-200);
+  --info-text: var(--color-info-700);
+  --info-solid: var(--color-info-600);
+
+  --focus-ring: 0 0 0 3px rgba(81, 69, 224, 0.28);
+  --focus-ring-danger: 0 0 0 3px rgba(220, 38, 38, 0.22);
+
+  /* ---- Typography ---- */
+  --font-sans:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+
+  --text-display: 700 clamp(2.25rem, 1.9rem + 1.6vw, 3.25rem) / 1.1 var(--font-sans);
+  --text-h1: 700 clamp(1.75rem, 1.55rem + 0.9vw, 2.25rem) / 1.2 var(--font-sans);
+  --text-h2: 650 1.5rem/1.28 var(--font-sans);
+  --text-h3: 600 1.25rem/1.35 var(--font-sans);
+  --text-h4: 600 1.0625rem/1.4 var(--font-sans);
+  --text-body-lg: 400 1.125rem/1.6 var(--font-sans);
+  --text-body: 400 1rem/1.6 var(--font-sans);
+  --text-body-sm: 400 0.875rem/1.5 var(--font-sans);
+  --text-caption: 500 0.75rem/1.4 var(--font-sans);
+  --text-label: 600 0.8125rem/1.3 var(--font-sans);
+
+  --tracking-tight: -0.02em;
+  --tracking-wide: 0.04em;
+
+  /* ---- Spacing (4px base grid) ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* ---- Radius ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 999px;
+
+  /* ---- Shadow (cool-toned, restrained) ---- */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.07), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 6px 16px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 16px 32px rgba(15, 23, 42, 0.12), 0 4px 8px rgba(15, 23, 42, 0.04);
+
+  /* ---- Motion ---- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 280ms;
+
+  /* ---- Layout ---- */
+  --container-max: 1180px;
+  --container-narrow: 480px;
+
+  /* ---- Z-index ---- */
+  --z-header: 100;
+  --z-dropdown: 200;
+  --z-overlay: 300;
+  --z-toast: 400;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-page: var(--color-neutral-950);
+    --bg-surface: #10131c;
+    --bg-surface-secondary: #151824;
+    --bg-subtle: #1a1e2b;
+    --bg-overlay: rgba(2, 6, 23, 0.6);
+
+    --border-subtle: #1c202c;
+    --border-default: #262b3a;
+    --border-strong: #333a4d;
+
+    --text-primary: var(--color-neutral-50);
+    --text-secondary: var(--color-neutral-400);
+    --text-tertiary: var(--color-neutral-500);
+    --text-inverse: var(--color-neutral-900);
+
+    --brand: var(--color-brand-400);
+    --brand-hover: var(--color-brand-300);
+    --brand-active: var(--color-brand-200);
+    --brand-subtle: rgba(102, 94, 239, 0.14);
+    --brand-subtle-border: rgba(131, 128, 248, 0.32);
+    --brand-text: var(--color-brand-300);
+
+    --success-bg: rgba(5, 150, 105, 0.12);
+    --success-border: rgba(16, 185, 129, 0.32);
+    --success-text: #6ee7b7;
+
+    --warning-bg: rgba(180, 83, 9, 0.14);
+    --warning-border: rgba(245, 158, 11, 0.32);
+    --warning-text: #fcd34d;
+
+    --danger-bg: rgba(220, 38, 38, 0.14);
+    --danger-border: rgba(239, 68, 68, 0.34);
+    --danger-text: #fca5a5;
+
+    --info-bg: rgba(37, 99, 235, 0.14);
+    --info-border: rgba(59, 130, 246, 0.32);
+    --info-text: #93c5fd;
+
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.36), 0 1px 2px rgba(0, 0, 0, 0.24);
+    --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.24);
+    --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+}

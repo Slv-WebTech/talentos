@@ -1,0 +1,28 @@
+.link {
+  color: var(--brand-text);
+  font-weight: 600;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.formFields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.roleFieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.roleLabel {
+  display: block;
+  margin: 0 0 var(--space-2);
+  padding: 0;
+  font: var(--text-label);
+  color: var(--text-primary);
+}

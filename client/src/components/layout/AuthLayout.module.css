@@ -1,0 +1,71 @@
+.page {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8) var(--space-4);
+  background:
+    radial-gradient(720px 420px at 12% -10%, var(--brand-subtle), transparent 60%),
+    radial-gradient(600px 360px at 100% 0%, rgba(102, 94, 239, 0.08), transparent 55%),
+    var(--bg-page);
+}
+
+.logoLink {
+  margin-bottom: var(--space-8);
+}
+
+.card {
+  width: 100%;
+  max-width: var(--container-narrow);
+}
+
+.heading {
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  font: var(--text-h2);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.subtitle {
+  font: var(--text-body-sm);
+  color: var(--text-secondary);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.footerText {
+  margin-top: var(--space-6);
+  text-align: center;
+  font: var(--text-body-sm);
+  color: var(--text-secondary);
+}
+
+.link {
+  color: var(--brand-text);
+  font-weight: 600;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-8);
+  font: var(--text-body-sm);
+  color: var(--text-tertiary);
+}
+
+.backLink:hover {
+  color: var(--text-secondary);
+}
