@@ -34,7 +34,8 @@ const ROADMAP_ITEMS = [
   {
     icon: SparkleIcon,
     title: 'AI resume screening',
-    body: "Automatically parse and rank incoming resumes against each job's requirements.",
+    body: "Resumes are parsed and ranked against each job's requirements — see Match % on every applicant.",
+    live: true,
   },
   {
     icon: ClockIcon,
@@ -93,7 +94,7 @@ export default function Dashboard() {
                 <span className={styles.roadmapIconWrap}>
                   <item.icon width={20} height={20} />
                 </span>
-                <Badge tone="neutral">Coming soon</Badge>
+                <Badge tone={item.live ? 'success' : 'neutral'}>{item.live ? 'Live' : 'Coming soon'}</Badge>
               </div>
               <h3 className={styles.roadmapCardTitle}>{item.title}</h3>
               <p className={styles.roadmapCardBody}>{item.body}</p>

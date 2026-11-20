@@ -31,17 +31,18 @@ async function createJob({
   return result.rows[0];
 }
 
-async function listOpenJobs() {
+async function listOpenJobs({ limit, offset }) {
   const result = await pool.query(
-    `SELECT * FROM jobs WHERE status = 'open' ORDER BY created_at DESC`
+    `SELECT * FROM jobs WHERE status = 'open' ORDER BY created_at DESC LIMIT $1 OFFSET $2`,
+    [limit + 1, offset]
   );
   return result.rows;
 }
 
-async function listJobsByRecruiter(recruiterId) {
+async function listJobsByRecruiter(recruiterId, { limit, offset }) {
   const result = await pool.query(
-    `SELECT * FROM jobs WHERE recruiter_id = $1 ORDER BY created_at DESC`,
-    [recruiterId]
+    `SELECT * FROM jobs WHERE recruiter_id = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3`,
+    [recruiterId, limit + 1, offset]
   );
   return result.rows;
 }
