@@ -25,7 +25,7 @@ Manual resume screening is slow and inconsistent. Recruiters need a way to post 
 A three-service system that mirrors how enterprise hiring platforms work at a smaller, portfolio-appropriate scale: a React client, a Node/Express API, and a Python AI service for resume parsing and ranking — each independently deployable.
 
 ## Current Project Status
-**Pre-implementation.** No code exists yet. This documentation baseline (see [[PROJECT_PLAN]]) is the first artifact of the project. All features in [[FEATURES]] are `PLANNED`.
+**In development.** The core slice — auth, job postings, resume upload + AI parsing, match scoring, the hiring pipeline with audit history, and recruiter search — is implemented, tested (54 automated tests) and documented. Interview scheduling, analytics, notifications and an admin console are planned. See [[IMPLEMENTED_FEATURES]], [[PROJECT_PLAN]] and [QA-REPORT](QA-REPORT.md).
 
 ## Technology Stack
 | Layer | Choice |
@@ -34,8 +34,8 @@ A three-service system that mirrors how enterprise hiring platforms work at a sm
 | Backend | Node.js, Express.js |
 | Database | **PostgreSQL** (see [[DECISIONS]] for why over MongoDB) |
 | Auth | JWT + bcrypt |
-| AI Service | Python, FastAPI, spaCy (extraction), sentence-transformers (ranking via embedding similarity) — see [[DECISIONS]] for why not a trained classifier |
-| File Storage | Cloudinary or S3 (final choice deferred — see [[PROJECT_PLAN]]) |
+| AI Service | Python, FastAPI, spaCy + rules (extraction and a deterministic skill/experience score); sentence-transformers is a roadmap item — see [[DECISIONS]] for why not a trained classifier |
+| File Storage | Cloudinary (private assets, signed URLs) |
 | Deployment | Vercel (client), Render/Railway (server + AI service), managed Postgres |
 
 ## Major Architectural Decisions
@@ -50,10 +50,10 @@ See [[DECISIONS]] for the full log. Summary: PostgreSQL for relational hiring-pi
 - Initial deployment targets are as listed above; final provider choice (Cloudinary vs S3, Render vs Railway) is deferred until the relevant feature is actually built.
 
 ## Dependencies / Integrations
-None yet — no external services are wired up. Planned: a cloud file-storage provider, and eventually a transactional email provider for notifications.
+Cloudinary (resume storage) and the internal AI service. Planned: a transactional e-mail provider for notifications.
 
 ## Current Limitations
-Nothing is implemented. There is no running application yet.
+Rule-based (not semantic) matching with a ~60-skill vocabulary plus resume-text matching; legacy `.doc` resumes are accepted but not parsed; no interview scheduling, analytics, notifications or admin UI; JWT is stored in `localStorage` with no refresh flow. Full list: [QA-REPORT](QA-REPORT.md).
 
 ## Important Terminology
 - **ATS** — Applicant Tracking System

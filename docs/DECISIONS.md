@@ -137,3 +137,31 @@ Architecture Decision Record. Append new entries; never edit history — if a de
 **Decision:** Added `server/services/` for outbound calls to external systems. `ARCHITECTURE.md`'s folder structure section is updated to include it.
 **Reason:** Precedent already existed for a folder outside the original four (`server/config/db.js`); outbound-integration code deserves the same treatment rather than being crammed into a controller.
 **Consequences:** None — purely additive to the existing structure.
+
+### Decision: Re-check the account on every authenticated request
+**Date:** 2026-11
+**Context:** QA showed a deleted or demoted user kept their token's privileges for up to 7 days.
+**Decision:** `verifyToken` verifies the JWT, then loads the user by id; missing user → 401, and `req.user.role` comes from the database rather than the token claim.
+**Reason:** Immediate revocation without a token blocklist or refresh flow; one primary-key lookup per request is cheap.
+**Consequences:** One extra query per request. Refresh tokens / httpOnly cookies remain an open product decision ([QA-REPORT](QA-REPORT.md)).
+
+### Decision: Rule-based scoring over the full resume text
+**Date:** 2026-11
+**Context:** Scores based only on parser-extracted skills could never match skills outside the ~60-term vocabulary (e.g. Figma, SAP).
+**Decision:** The AI service returns the resume text, the server stores it in `applications.resume_text` (never in list payloads), and `/rank` matches required skills against the extracted skills **or** whole words in the text. Weights (70 % skills / 30 % experience) re-normalise over the criteria a job sets.
+**Reason:** Deterministic, explainable, no model download; fixes the structural false-negative. Embeddings remain a roadmap item.
+**Consequences:** Larger rows (text capped at 50 000 chars); scores are refreshed in the background when a job's criteria change.
+
+### Decision: Enforced pipeline transitions with an audit trail
+**Date:** 2026-11
+**Context:** Any status could jump to any other (`rejected → selected`) and nothing recorded who changed it.
+**Decision:** A transition table (applied → shortlisted/rejected; shortlisted → applied/interview/rejected; interview → shortlisted/selected/rejected; selected → interview; rejected → applied/shortlisted) is enforced server-side; every change writes `application_status_history` in the same transaction. The UI offers only valid moves and confirms Selected / Rejected.
+**Reason:** Prevents accidental or inconsistent outcomes and gives recruiters accountability.
+**Consequences:** The table is a product assumption — edit `TRANSITIONS` in `applicationController.js` and the client service together.
+
+### Decision: Private resume storage with short-lived signed links
+**Date:** 2026-11
+**Context:** Public Cloudinary URLs let anyone with a link read a resume.
+**Decision:** Upload as `authenticated` assets, store only the public id, and expose resumes through `GET /api/applications/:id/resume-url` (5-minute signed URL, owner only).
+**Reason:** Candidate PII stays behind the API's authorisation checks.
+**Consequences:** Cloudinary signed links can't be bound to a user; legacy rows keep their old URL.

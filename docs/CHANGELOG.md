@@ -63,3 +63,20 @@ The project ran under the generic working name "ats-system" through Auth, Job Po
 - `client/package.json`/`server/package.json` renamed to `talentos-client`/`talentos-server` (lockfiles resynced via `npm install`, dependency versions unchanged).
 - `ai-service/main.py`'s FastAPI title and `server/server.js`'s startup log message updated to match.
 - No functional/API changes — naming and metadata only.
+
+## Review hardening pass
+- Security: helmet, rate limiting, 100kb body limit, JWT_SECRET startup check, upload magic-byte validation, optional ai-service shared secret, case-insensitive emails, input type/length checks, duplicate-apply race returns 409, orphaned Cloudinary uploads cleaned up.
+- Features: `PATCH /api/applications/:id/status` (recruiter-owner only) with a status selector on the applicants page; closed jobs hidden from non-owners.
+- Tests: server and ai-service suites; `docker-compose.yml` for local Postgres.
+
+## Private resumes, pagination, ranking
+- Migration `004`: `resume_public_id`, `ranking_details`. Resumes now upload as authenticated assets; `GET /api/applications/:id/resume-url` returns a 5-minute signed URL. List endpoints no longer return `resume_url`.
+- Pagination: `?limit` (1-100, default 50) and `?offset` on jobs and applications lists; responses include `meta: { limit, offset, hasMore }`.
+- AI ranking: ai-service `POST /rank` (deterministic: 70% skill overlap, 30% experience fit). Scores are stored on apply, applicants are ordered best-first, and `POST /api/applications/rerank?job=:id` rescoring is available (UI: "Re-score all").
+
+## QA follow-up pass
+- Ranking now uses the full resume text (stored in `applications.resume_text`, never returned by list queries); job edits trigger a background re-rank (5 workers).
+- Auth: every request re-reads the account (deleted users 401, DB role wins); login limiter ignores successful logins; hourly register limiter; `JWT_EXPIRES_IN`.
+- Pipeline: transition rules, `application_status_history` (migration 005), history endpoint, confirmation + feedback in the UI.
+- Applicants: search / status filter / sort, filtered empty state, popup-safe resume opening.
+- A11y/UI: tap targets, `aria-controls`, dashboard copy. Tooling: client Vitest suite, real-DB integration tests, GitHub Actions CI, `npm run create-admin`.

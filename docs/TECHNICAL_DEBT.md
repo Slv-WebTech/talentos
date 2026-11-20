@@ -15,14 +15,16 @@ Do not let this file go stale — it's reviewed every time [[PROJECT_SCORE]] is 
 
 ---
 
-### No automated tests for Auth, Job Posting, or Resume Upload
+### Automated test coverage is partial (PARTIALLY RESOLVED)
+- Update: server route tests (`server/test/api.test.js`, stubbed models) and ai-service pytest tests now exist. Still missing: tests against a real Postgres DB, upload-pipeline tests, and client tests.
 - Introduced: 2026-08-14, Auth feature. Widened: 2026-08-14, Job Posting feature. Widened again: 2026-08-22, Resume Upload + AI Parsing (third feature, same gap).
 - Why: Prioritized real, thorough manual verification passes (12/17/14-case curl batteries, plus live browser walkthroughs where done — see [[PROJECT_PLAN]]) over writing test infrastructure under time pressure. Manual verification proved each feature genuinely works at the time it shipped; none is regression-proof.
 - Risk: Three features deep now with zero automated coverage. A future change to any auth, job, or application file could silently break registration, login, role/ownership checks, or the upload→parse→persist pipeline, with nothing catching it before a manual re-check — and the manual re-check surface area keeps growing.
 - Fix: Add integration tests per [[TESTING]]'s strategy (route-level tests against a test Postgres database) covering the cases already manually verified across all three features.
 - Priority: high — was already flagged before Resume Upload landed; now the strongest case yet to address before a fourth feature (AI ranking) lands.
 
-### AI service's `/parse-resume` has no request authentication
+### AI service's `/parse-resume` authentication (RESOLVED when `AI_SERVICE_SECRET` is set)
+- Update: optional shared-secret header `X-Internal-Secret`; deploy with it set.
 - Introduced: 2026-08-22, Resume Upload + AI Parsing.
 - Why: Matches the existing `/health` precedent and [[ARCHITECTURE]]'s stated security boundary ("client never talks to the AI service directly") — relies on network topology (ai-service not publicly exposed), not application-level auth.
 - Risk: If the ai-service is ever reachable from outside the private network it's meant to run in, anyone could call `/parse-resume` directly, bypassing Express's auth/role/ownership checks (though the AI service itself has no database access, so the blast radius is limited to unauthenticated resume parsing, not data exposure).
@@ -50,7 +52,8 @@ Do not let this file go stale — it's reviewed every time [[PROJECT_SCORE]] is 
 - Fix: Consider a visually stronger treatment for parse-error cards (e.g. sorting them first, or a persistent badge) if this proves to be a real usability problem once recruiters actually use it.
 - Priority: low — the current warning is visible, not hidden; escalate only if real usage shows it's being missed.
 
-### No rate-limiting on `/api/auth/login` or `/api/auth/register`
+### Rate-limiting on `/api/auth/*` (RESOLVED)
+- Update: `express-rate-limit` now guards login/register (20 per 15 min per IP) and the API generally; helmet and a 100kb JSON limit were also added.
 - Introduced: 2026-08-14, Auth feature.
 - Why: Out of scope for getting the core flow working; not part of the Auth acceptance criteria in [[PROJECT_PLAN]].
 - Risk: Login is brute-forceable and register is spammable — no throttling exists.
@@ -70,3 +73,12 @@ Do not let this file go stale — it's reviewed every time [[PROJECT_SCORE]] is 
 - Risk: Readable by any injected/XSS script; not currently a real exposure since the client runs no third-party JS, but that assumption could stop being true.
 - Fix: Migrate to an httpOnly cookie + CSRF protection if/when third-party scripts are ever added to the client.
 - Priority: low, revisit if the risk factor changes.
+
+### Resume files are publicly retrievable by URL (RESOLVED for new uploads)
+- Update: new resumes upload as Cloudinary `authenticated` assets and are served only through `GET /api/applications/:id/resume-url` (5-minute signed URL, owning candidate or job-owning recruiter). Applications created before migration 004 keep a legacy public `resume_url` and should be re-uploaded or migrated to authenticated storage.
+
+### Remaining gaps
+- Candidate-facing lists use the server's default page (50); only the recruiter applicants page has "Load more". Ranking is rule-based (70% skill overlap, 30% experience), not embedding-based. No admin seed, CI pipeline or client tests.
+
+### Open after the QA follow-up pass
+- Real Cloudinary end-to-end test needs credentials; no refresh-token flow (DB re-check + `JWT_EXPIRES_IN` mitigate); JWT still in `localStorage`; offset (not keyset) pagination; register reveals account existence; admin has no UI. See `docs/QA-REPORT.md` for reasons.

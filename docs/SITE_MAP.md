@@ -16,7 +16,7 @@ Application
 ├── Recruiter
 │   ├── /recruiter/dashboard        — hiring dashboard (active jobs, pipeline)
 │   ├── /recruiter/jobs             — manage own postings + create form (combined) — implemented
-│   ├── /recruiter/jobs/:id         — view applicants (unranked — AI ranking not built yet) — implemented
+│   ├── /recruiter/jobs/:id         — ranked applicants: search, status filter, sort, history, re-score — implemented
 │   ├── /recruiter/jobs/:id/interviews — schedule/manage interviews for a job
 │   └── /recruiter/analytics        — recruitment reports, export
 └── Admin
@@ -27,7 +27,7 @@ Application
 
 | Route | Purpose | Access | API dependencies | Status |
 |---|---|---|---|---|
-| `/` | Landing page (currently: server health check + login/register links) | Public | `GET /api/health` | IMPLEMENTED (minimal — real landing content still PLANNED) |
+| `/` | Landing page with login / register links | Public | `GET /api/health` | IMPLEMENTED |
 | `/register` | Account creation, role selection (Recruiter/Candidate only) | Public | `POST /api/auth/register` | IMPLEMENTED |
 | `/login` | Authentication | Public | `POST /api/auth/login` | IMPLEMENTED |
 | `/dashboard` | Generic placeholder post-login screen | Any authenticated role | `GET /api/auth/me` (session read client-side, not actually called yet) | IMPLEMENTED (placeholder — role-specific dashboards below still PLANNED) |
@@ -37,7 +37,7 @@ Application
 | `/candidate/applications` | Track own applications | Candidate | `GET /api/applications?candidate=me` | IMPLEMENTED |
 | `/recruiter/dashboard` | Hiring dashboard | Recruiter | `GET /api/dashboard/summary` | PLANNED |
 | `/recruiter/jobs` | Manage own postings + create form (no separate `/new` route — combined into one page) | Recruiter | `POST /api/jobs`, `GET /api/jobs?recruiter=me`, `PUT /api/jobs/:id` (status toggle only, in the UI) | IMPLEMENTED |
-| `/recruiter/jobs/:id` | View applicants (unranked — AI ranking not built yet) | Recruiter | `GET /api/applications?job=:id` | IMPLEMENTED |
+| `/recruiter/jobs/:id` | Ranked applicants with search / status filter / sort / history / re-score | Recruiter (owner) | `GET /api/applications?job=:id`, `PATCH /api/applications/:id/status`, `GET /api/applications/:id/history`, `GET /api/applications/:id/resume-url`, `POST /api/applications/rerank` | IMPLEMENTED |
 | `/recruiter/jobs/:id/interviews` | Schedule/manage interviews | Recruiter | `POST /api/interviews`, `PUT /api/interviews/:id` | PLANNED |
 | `/recruiter/analytics` | Reports, PDF/Excel export | Recruiter | `GET /api/analytics/*` | PLANNED |
 | `/admin/dashboard` | Platform overview | Admin | `GET /api/admin/summary` | PLANNED |
