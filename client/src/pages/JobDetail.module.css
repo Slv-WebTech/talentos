@@ -8,6 +8,7 @@
 .backLink {
   display: inline-flex;
   align-items: center;
+  min-height: 32px;
   gap: var(--space-1);
   font: var(--text-body-sm);
   color: var(--text-secondary);

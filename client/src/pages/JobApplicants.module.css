@@ -7,6 +7,7 @@
 .backLink {
   display: inline-flex;
   align-items: center;
+  min-height: 32px;
   gap: var(--space-1);
   font: var(--text-body-sm);
   color: var(--text-secondary);
@@ -110,6 +111,11 @@
 }
 
 .resumeLink {
+  min-height: 32px;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
   font: var(--text-body-sm);
   font-weight: 600;
   color: var(--brand-text);
@@ -123,4 +129,53 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+}
+
+.statusSelect {
+  width: 100%;
+  margin-bottom: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  font: var(--text-body-sm);
+  color: var(--text-primary);
+  background: var(--bg-surface-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color-scheme: light dark;
+}
+
+.statusSelect:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.matchScore {
+  font: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.listActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.filterBar {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 640px) {
+  .filterBar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.historyList {
+  margin: 0 0 var(--space-3);
+  padding-left: var(--space-5);
+  font: var(--text-body-sm);
+  color: var(--text-secondary);
 }

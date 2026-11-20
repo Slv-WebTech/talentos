@@ -18,6 +18,18 @@ const upload = multer({
   fileFilter,
 });
 
+const SIGNATURES = {
+  '.pdf': [Buffer.from('%PDF')],
+  '.docx': [Buffer.from([0x50, 0x4b, 0x03, 0x04])],
+  '.doc': [Buffer.from([0xd0, 0xcf, 0x11, 0xe0])],
+};
+
+// Extension alone is spoofable; confirm the file's leading bytes match its claimed type.
+function hasValidSignature(file) {
+  const ext = path.extname(file.originalname).toLowerCase();
+  return SIGNATURES[ext].some((sig) => file.buffer.subarray(0, sig.length).equals(sig));
+}
+
 function uploadResume(req, res, next) {
   upload.single('resume')(req, res, (err) => {
     if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
@@ -26,8 +38,11 @@ function uploadResume(req, res, next) {
     if (err) {
       return res.status(400).json({ error: { message: err.message } });
     }
+    if (req.file && req.file.size > 0 && !hasValidSignature(req.file)) {
+      return res.status(400).json({ error: { message: 'file content does not match its extension' } });
+    }
     next();
   });
 }
 
-module.exports = { uploadResume };
+module.exports = { uploadResume, hasValidSignature };

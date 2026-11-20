@@ -1,0 +1,33 @@
+name: Bug report
+description: Something in TalentOS is broken or behaves unexpectedly
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Please do not paste secrets, tokens, `.env` contents, or real candidate data.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [client, server, ai-service, database / migrations, docs, other]
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Include what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Log in as a recruiter\n2. ..."
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: OS, browser, Node / Python versions, how you started the services.

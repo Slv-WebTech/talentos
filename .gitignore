@@ -4,19 +4,34 @@ venv/
 .venv/
 __pycache__/
 *.pyc
+.pytest_cache/
 
-# Env
+# Env & secrets (only *.example files are tracked)
 .env
-.env.local
+.env.*
+!.env.example
+*.pem
+*.key
 
-# Build output
+# Build output & caches
 dist/
 build/
+coverage/
+.vite/
+*.tsbuildinfo
 
-# Editor/OS
-.DS_Store
-Thumbs.db
-
-# Logs
+# Logs & local data
 *.log
 npm-debug.log*
+*.out
+*.err
+pgdata/
+*.dump
+*.sql.bak
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.claude/

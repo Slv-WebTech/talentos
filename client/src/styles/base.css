@@ -85,7 +85,7 @@ p {
   left: var(--space-4);
   z-index: 1000;
   background: var(--brand);
-  color: #fff;
+  color: var(--text-on-brand);
   padding: var(--space-3) var(--space-5);
   border-radius: var(--radius-md);
   font: var(--text-label);

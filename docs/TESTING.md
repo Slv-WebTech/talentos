@@ -1,6 +1,6 @@
 # Testing
 
-Status: **planned strategy, not yet executed** — no tests exist because no code exists ([[IMPLEMENTED_FEATURES]]).
+Status: **executed** — server unit (node:test), server real-Postgres integration, ai-service (pytest) and client (Vitest + Testing Library) suites exist and run in CI. Still missing: browser E2E (Playwright) and tests against a real Cloudinary account.
 
 ## Strategy
 Test each service at the level appropriate to its role, added alongside the feature that needs it (per Phase 4 "Step 5 — Verify" of the standing dev protocol) — not retrofitted later.
@@ -18,7 +18,9 @@ Test each service at the level appropriate to its role, added alongside the feat
 - Full flow through the client (register → login → post job → apply → view ranked candidates) — deferred until the core vertical slice in [[PROJECT_PLAN]] exists; likely Playwright.
 
 ## Test Commands
-Not applicable yet — no `package.json`/`requirements.txt` exists. This section gets filled in with real commands (`npm test`, `pytest`, etc.) once the repo scaffold step lands, and mirrored into [[DEV_CONTEXT]].
+- server: `cd server && npm test`; integration: `npm run test:integration` (needs DATABASE_URL and CREATE privilege)
+- client: `cd client && npm test`
+- ai-service: `cd ai-service && venv/Scripts/python -m pytest tests` (needs `requirements-dev.txt`)
 
 ## Coverage Expectations
 No hard percentage target. Priority is covering the paths that are expensive to get wrong: auth, payment-adjacent flows (none currently), and the resume parsing/ranking pipeline (silent wrong output there is hard to notice).
@@ -31,4 +33,4 @@ No hard percentage target. Priority is covering the paths that are expensive to 
 5. Role-based access control — a Candidate token must not be able to hit Recruiter/Admin-only routes.
 
 ## Known Untested Areas
-Everything — nothing is built yet.
+Client components, real-Postgres integration, the Cloudinary upload pipeline, and the full apply flow.

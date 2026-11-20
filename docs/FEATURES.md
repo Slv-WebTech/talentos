@@ -1,6 +1,6 @@
 # Features
 
-Full feature inventory transcribed from the original project spec. All statuses are `PLANNED` — see [[IMPLEMENTED_FEATURES]] for what's actually built (currently nothing). Status values: `PLANNED`, `IN_PROGRESS`, `IMPLEMENTED`, `TESTING`, `PARTIALLY_IMPLEMENTED`, `BLOCKED`, `DEPRECATED`.
+Full feature inventory transcribed from the original project spec. Statuses are kept per feature below (several are now implemented) — see [[IMPLEMENTED_FEATURES]] for what's actually built (currently nothing). Status values: `PLANNED`, `IN_PROGRESS`, `IMPLEMENTED`, `TESTING`, `PARTIALLY_IMPLEMENTED`, `BLOCKED`, `DEPRECATED`.
 
 ---
 

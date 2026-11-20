@@ -1,29 +1,43 @@
 # Deployment
 
-Status: **planned, not yet executed** — nothing is deployed because nothing is built ([[IMPLEMENTED_FEATURES]]).
+Status: **not deployed yet.** The application is runnable locally and in CI; this file is the checklist for the first deployment.
 
-## Target Platforms (from the original spec)
+## Target Platforms
 | Service | Platform |
 |---|---|
-| `client/` (React/Vite) | Vercel |
-| `server/` (Node/Express) | Render or Railway (final choice open, see [[DECISIONS]]) |
-| `ai-service/` (FastAPI) | Render or Railway (same provider as server, likely, to simplify networking) |
-| PostgreSQL | Managed Postgres (Render/Railway Postgres, or a dedicated provider) |
+| `client/` (React/Vite static build) | Vercel (or any static host) |
+| `server/` (Node/Express) | Render or Railway (open decision, see [[DECISIONS]]) |
+| `ai-service/` (FastAPI) | Same provider as the server, **private networking only** |
+| PostgreSQL | Managed Postgres (14+) |
+| Resume files | Cloudinary (private `authenticated` assets) |
 
-## Steps (to be filled in once the repo scaffold and first deploy happen)
-1. Provision managed Postgres, run initial schema migration.
-2. Deploy `server/` with `DATABASE_URL`, `JWT_SECRET`, and file-storage credentials as env vars.
-3. Deploy `ai-service/` with any model-download step baked into the build (spaCy/sentence-transformers models).
-4. Deploy `client/` to Vercel with the server's public URL as an env var.
-5. Verify the full flow (register → post job → apply → rank) against the deployed stack.
+## Steps
+1. Provision Postgres; set `DATABASE_URL`; run `npm run migrate` (applies 001–005).
+2. Deploy `ai-service/` (build step installs `requirements.txt`, including the spaCy model wheel). Set `AI_SERVICE_SECRET`. Do **not** expose it publicly.
+3. Deploy `server/` with the variables below; start with `npm start`.
+4. Create the first admin: `ADMIN_EMAIL=… ADMIN_PASSWORD=… npm run create-admin`.
+5. Build the client (`npm run build`) with `VITE_SERVER_URL` pointing at the API and deploy `dist/`.
+6. Smoke test: register → post job → apply with a real resume → check score and signed resume link → move through the pipeline.
 
-## Environment Variables (anticipated, finalized when scaffold is built)
-- `DATABASE_URL` — Postgres connection string
-- `JWT_SECRET` — token signing secret
-- `CLOUDINARY_*` or `AWS_S3_*` — file storage credentials (see open decision in [[DECISIONS]])
-- `CLIENT_URL` — for CORS config on the server
-- `AI_SERVICE_URL` — for the server to reach the AI service internally
+## Environment variables (server)
+| Variable | Notes |
+|---|---|
+| `DATABASE_URL` | required |
+| `JWT_SECRET` | required, ≥ 32 random characters (startup fails otherwise) |
+| `CLIENT_URL` | required, exact client origin for CORS |
+| `AI_SERVICE_URL` / `AI_SERVICE_SECRET` | internal URL and shared secret (same secret in the AI service env) |
+| `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` | required for uploads |
+| `TRUST_PROXY` | set to the number of proxy hops (usually `1`) so rate limits use real client IPs |
+| `JWT_EXPIRES_IN`, `AUTH_RATE_LIMIT`, `REGISTER_RATE_LIMIT`, `API_RATE_LIMIT`, `PORT` | optional tuning |
+
+## Hardening checklist
+- [ ] HTTPS everywhere (helmet already sends HSTS); API and client on trusted origins.
+- [ ] `JWT_SECRET`, `AI_SERVICE_SECRET`, Cloudinary and database credentials stored in the platform's secret manager — never in the repo.
+- [ ] AI service reachable only from the API.
+- [ ] Rate limiter is in-memory (per instance): use a shared store (e.g. Redis) before scaling horizontally.
+- [ ] Database backups and a migration rollback plan.
+- [ ] Decide on refresh tokens / httpOnly cookie sessions before opening registration publicly ([QA-REPORT](QA-REPORT.md)).
 
 ## Notes
-- `.env` must never be committed — see [[TECHNICAL_DEBT]] if this is ever violated and needs remediation.
-- CI/CD (GitHub Actions) is tracked as a bonus feature in [[FUTURE_FEATURES]], not part of the initial deploy.
+- `.env` must never be committed — only `server/.env.example` (placeholders) is tracked.
+- CI (`.github/workflows/ci.yml`) runs server, integration, client and ai-service tests on every PR; continuous deployment is not set up.

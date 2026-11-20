@@ -7,16 +7,24 @@ const PUBLIC_ROLES = ['recruiter', 'candidate'];
 
 function signToken(user) {
   return jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: '7d',
+    expiresIn: process.env.JWT_EXPIRES_IN || '7d',
   });
 }
 
 async function register(req, res, next) {
   try {
-    const { name, email, password, role } = req.body;
+    const { password, role } = req.body;
+    const name = typeof req.body.name === 'string' ? req.body.name.trim() : req.body.name;
+    const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : req.body.email;
 
     if (!name || !email || !password || !role) {
       return res.status(400).json({ error: { message: 'name, email, password, and role are required' } });
+    }
+    if (typeof name !== 'string' || typeof email !== 'string' || typeof password !== 'string') {
+      return res.status(400).json({ error: { message: 'name, email, and password must be strings' } });
+    }
+    if (name.length > 255 || email.length > 255 || password.length > 128) {
+      return res.status(400).json({ error: { message: 'name, email, or password is too long' } });
     }
     if (!EMAIL_RE.test(email)) {
       return res.status(400).json({ error: { message: 'invalid email format' } });
@@ -45,9 +53,10 @@ async function register(req, res, next) {
 
 async function login(req, res, next) {
   try {
-    const { email, password } = req.body;
+    const { password } = req.body;
+    const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : req.body.email;
 
-    if (!email || !password) {
+    if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
       return res.status(400).json({ error: { message: 'email and password are required' } });
     }
 
