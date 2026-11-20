@@ -11,8 +11,13 @@ async function createUser({ name, email, passwordHash, role }) {
 }
 
 async function findUserByEmail(email) {
-  const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+  const result = await pool.query('SELECT * FROM users WHERE lower(email) = lower($1)', [email]);
   return result.rows[0] || null;
 }
 
-module.exports = { createUser, findUserByEmail };
+async function findUserById(id) {
+  const result = await pool.query('SELECT id, role FROM users WHERE id = $1', [id]);
+  return result.rows[0] || null;
+}
+
+module.exports = { createUser, findUserByEmail, findUserById };
