@@ -85,6 +85,7 @@ export default function AppShell({ children }) {
               className={styles.menuButton}
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
+              aria-controls="mobile-nav"
               onClick={() => setMobileOpen((v) => !v)}
             >
               {mobileOpen ? <XIcon /> : <MenuIcon />}
@@ -93,6 +94,7 @@ export default function AppShell({ children }) {
         </div>
 
         <nav
+          id="mobile-nav"
           className={[styles.mobileNav, mobileOpen && styles.mobileNavOpen].filter(Boolean).join(' ')}
           aria-label="Primary"
         >

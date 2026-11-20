@@ -180,9 +180,11 @@
 
     --text-primary: var(--color-neutral-50);
     --text-secondary: var(--color-neutral-400);
-    --text-tertiary: var(--color-neutral-500);
+    --text-tertiary: #8493a8;
     --text-inverse: var(--color-neutral-900);
 
+    /* white on brand-400/300 fails WCAG AA (3.2:1 / 2.1:1); use dark text on the lighter dark-theme brand */
+    --text-on-brand: var(--color-neutral-950);
     --brand: var(--color-brand-400);
     --brand-hover: var(--color-brand-300);
     --brand-active: var(--color-brand-200);

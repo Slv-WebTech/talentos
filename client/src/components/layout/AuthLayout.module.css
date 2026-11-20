@@ -49,6 +49,9 @@
 }
 
 .link {
+  display: inline-block;
+  min-height: 24px;
+  line-height: 24px;
   color: var(--brand-text);
   font-weight: 600;
 }
@@ -60,6 +63,7 @@
 .backLink {
   display: inline-flex;
   align-items: center;
+  min-height: 32px;
   gap: var(--space-1);
   margin-top: var(--space-8);
   font: var(--text-body-sm);
